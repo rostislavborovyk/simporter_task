@@ -18,7 +18,7 @@ class Todo(Resource):
     @api.marshal_with(time_line_model)
     def get(self, **kwargs):
         args = arg_parser.parse_args()
-        print(args)
+        # print(args)
 
         data = dp.get_data(
             start_date=int(datetime.datetime.fromisoformat(args.get("startDate", None)).timestamp()),
@@ -29,7 +29,7 @@ class Todo(Resource):
 
         response_data = [
             EventDao(date=obj_date.strftime("%y-%m-%d"), value=obj_values["id"])
-            for obj_date, obj_values in data[:10].iterrows()
+            for obj_date, obj_values in data.iterrows()
         ]
 
         return {'timeline': response_data}

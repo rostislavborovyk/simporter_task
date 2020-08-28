@@ -45,8 +45,6 @@ class DataProcessor:
             tmp_data = tmp_data[tmp_data["timestamp"] >= start_date]
             tmp_data = tmp_data[tmp_data["timestamp"] <= end_date]
 
-        # todo write here optional changing to cumulative type
-
         # translating timestamp to date, counting values and ordering by date
         tmp_data["timestamp"] = tmp_data["timestamp"].apply(datetime.datetime.fromtimestamp)
         tmp_data = tmp_data.groupby(by="timestamp").agg("count").sort_values(by="timestamp")
@@ -60,6 +58,10 @@ class DataProcessor:
             tmp_data = tmp_data.resample("M").sum()
         else:
             tmp_data = tmp_data.resample("W").sum()
+
+        # changing to cumulative type if it's set
+        if data_type == self.CUMULATIVE_TYPE:
+            tmp_data = tmp_data.cumsum()
 
         # print(tmp_data)
         # print(len(tmp_data))
