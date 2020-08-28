@@ -1,5 +1,6 @@
-import pandas as pd
+from typing import Optional
 import datetime
+import pandas as pd
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
@@ -10,40 +11,46 @@ class DataProcessor:
     BIWEEKLY_GROUPING: str = "bi-weekly"
     MONTHLY_GROUPING: str = "monthly"
 
-    CUMULATIVE_TYPE = "cumulative"
-    USUAL_TYPE = "usual"
+    CUMULATIVE_TYPE: str = "cumulative"
+    USUAL_TYPE: str = "usual"
 
     def __init__(self):
         # todo move data.csv to the top level directory
-        self._data = pd.read_csv("data.csv", sep=";")
-        self._start_date = self._data["timestamp"].min()
-        self._end_date = self._data["timestamp"].max()
-        # print(datetime.datetime.fromtimestamp(self._start_date))
-        # print(datetime.datetime.fromtimestamp(self._end_date))
+        self._data: pd.DataFrame = pd.read_csv("data.csv", sep=";")
 
-        self.get_data(
-            start_date=1548799200,
-            end_date=1577750400,
-            grouping=self.MONTHLY_GROUPING
-        )
+    def _filter_by_attrs(self, data: pd.DataFrame, attrs: dict) -> pd.DataFrame:
+        asin: Optional[str, None] = attrs.get("asin", None)
+        brand: Optional[str, None] = attrs.get("brand", None)
+        stars: Optional[str, None] = attrs.get("stars", None)
 
-    def _process_all_data(self):
-        pass
+        if asin is not None:
+            data = data[data["asin"] == asin]
+
+        if brand is not None:
+            data = data[data["brand"] == brand]
+
+        if stars is not None:
+            data = data[data["stars"] == int(stars)]
+
+        return data
 
     def get_data(self,
                  start_date: int = None,
                  end_date: int = None,
                  grouping: str = WEEKLY_GROUPING,
-                 data_type: str = USUAL_TYPE
+                 data_type: str = USUAL_TYPE,
+                 **attrs
                  ) -> pd.DataFrame:
 
-        tmp_data = self._data[:200]
+        # todo add checking of empty dataset after filtering
+        tmp_data = self._data
 
         # filtering by date
         if start_date is not None and end_date is not None:
-            # print("Filtered by date")
             tmp_data = tmp_data[tmp_data["timestamp"] >= start_date]
             tmp_data = tmp_data[tmp_data["timestamp"] <= end_date]
+
+        tmp_data = self._filter_by_attrs(tmp_data, attrs)
 
         # translating timestamp to date, counting values and ordering by date
         tmp_data["timestamp"] = tmp_data["timestamp"].apply(datetime.datetime.fromtimestamp)
@@ -59,14 +66,10 @@ class DataProcessor:
         else:
             tmp_data = tmp_data.resample("W").sum()
 
-        # changing to cumulative type if it's set
+        # changing to cumulative type if cumulative type is set
         if data_type == self.CUMULATIVE_TYPE:
             tmp_data = tmp_data.cumsum()
 
-        # print(tmp_data)
-        # print(len(tmp_data))
-
-        # todo write filters by attr values
         return tmp_data
 
 

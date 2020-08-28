@@ -6,6 +6,9 @@ from flask_restx import Api
 api = Api()
 
 
+# todo add tests
+# todo add docs to all
+
 def register_blueprints(app: Flask) -> None:
     api_bp = import_module("app.api").bp
     app.register_blueprint(api_bp, url_prefix='/api')

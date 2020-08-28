@@ -1,8 +1,7 @@
 from flask_restx import reqparse
 
-arg_parser = reqparse.RequestParser()
+arg_parser = reqparse.RequestParser(bundle_errors=True)
 
-# todo change to type date
 arg_parser.add_argument("startDate", type=str, help="Date should be in format yyyy-mm-dd")
 arg_parser.add_argument("endDate", type=str, help="Date should be in format yyyy-mm-dd")
 
@@ -19,6 +18,19 @@ arg_parser.add_argument(
     help="Invalid choice:"
 )
 
-# args = parser.parse_args()
+arg_parser.add_argument(
+    "asin",
+    type=str
+)
 
-# todo add filtering by attributes
+arg_parser.add_argument(
+    "brand",
+    type=str
+)
+
+arg_parser.add_argument(
+    "stars",
+    type=str,
+    choices=("1", "2", "3", "4", "5"),
+    help="Invalid choice:"
+)
