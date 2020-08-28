@@ -9,4 +9,3 @@ event_model = api.model('PointModel', {
 time_line_model = api.model('TimeLineModel', {
     'timeline': fields.List(fields.Nested(event_model)),
 })
-
