@@ -1,11 +1,12 @@
-from app import api
 from flask_restx import fields
 
-event_model = api.model('PointModel', {
+from app import api
+
+event_model = api.model('Timeline', {
     'date': fields.String,
     'value': fields.String,
 })
 
-time_line_model = api.model('TimeLineModel', {
+events_model = api.model('Timeline', {
     'timeline': fields.List(fields.Nested(event_model)),
 })

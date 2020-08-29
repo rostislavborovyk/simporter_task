@@ -1,5 +1,6 @@
-from typing import Optional
 import datetime
+from typing import Optional
+
 import pandas as pd
 
 pd.set_option('display.max_columns', None)

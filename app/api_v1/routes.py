@@ -1,18 +1,20 @@
-from app.api import api_bp
-from app import api
-from flask_restx import Resource
-
-from app.api.arg_parser import arg_parser
-from app.api.dao import EventDao
-from app.api.marshal_models import time_line_model
-from app.api.data_processor import dp
-
 import datetime
 
+from flask_restx import Resource
 
-@api_bp.route('/timeline')
-class Todo(Resource):
-    @api.marshal_with(time_line_model)
+from app.api_v1.arg_parser import arg_parser
+from app.api_v1.dao import EventDao
+from app.api_v1.marshal_models import events_model
+from app.api_v1.data_processor import dp
+from app.api_v1 import ns
+
+
+@ns.route('/timeline')
+class Timeline(Resource):
+
+    @ns.doc("List of events")
+    @ns.marshal_with(events_model)
+    @ns.expect(arg_parser)
     def get(self, **kwargs):
         args = arg_parser.parse_args()
 
@@ -32,5 +34,3 @@ class Todo(Resource):
         ]
 
         return {'timeline': response_data}
-
-# todo add info method
