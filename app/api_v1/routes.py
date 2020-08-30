@@ -21,18 +21,21 @@ class Timeline(Resource):
         raw_start_date = args.get("startDate", None)
         raw_end_date = args.get("endDate", None)
 
-        if raw_start_date is not None:
-            start_date = int(datetime.fromisoformat(raw_start_date).timestamp())
-        else:
-            start_date = None
+        try:
+            if raw_start_date is not None:
+                start_date = int(datetime.fromisoformat(raw_start_date).timestamp())
+            else:
+                start_date = None
 
-        if raw_start_date is not None:
-            end_date = int(datetime.fromisoformat(raw_end_date).timestamp())
-        else:
-            end_date = None
+            if raw_start_date is not None:
+                end_date = int(datetime.fromisoformat(raw_end_date).timestamp())
+            else:
+                end_date = None
 
-        if start_date is not None and end_date is not None and start_date > end_date:
-            raise BadRequest("startDate should be less then endDate")
+            if start_date is not None and end_date is not None and start_date > end_date:
+                raise BadRequest("startDate should be less then endDate")
+        except ValueError:
+            raise BadRequest("incorrect date format")
 
         data = dp.get_data(
             start_date=start_date,
