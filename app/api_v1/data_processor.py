@@ -2,6 +2,7 @@ import datetime
 from typing import Optional
 
 import pandas as pd
+from copy import deepcopy
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
@@ -16,13 +17,12 @@ class DataProcessor:
     USUAL_TYPE: str = "usual"
 
     def __init__(self):
-        # todo move data.csv to the top level directory
         self._data: pd.DataFrame = pd.read_csv("data.csv", sep=";")
 
     def _filter_by_attrs(self, data: pd.DataFrame, attrs: dict) -> pd.DataFrame:
-        asin: Optional[str, None] = attrs.get("asin", None)
-        brand: Optional[str, None] = attrs.get("brand", None)
-        stars: Optional[str, None] = attrs.get("stars", None)
+        asin: Optional[str] = attrs.get("asin", None)
+        brand: Optional[str] = attrs.get("brand", None)
+        stars: Optional[str] = attrs.get("stars", None)
 
         if asin is not None:
             data = data[data["asin"] == asin]
@@ -36,15 +36,15 @@ class DataProcessor:
         return data
 
     def get_data(self,
-                 start_date: int = None,
-                 end_date: int = None,
+                 start_date: Optional[int] = None,
+                 end_date: Optional[int] = None,
                  grouping: str = WEEKLY_GROUPING,
                  data_type: str = USUAL_TYPE,
                  **attrs
                  ) -> pd.DataFrame:
 
-        # todo add checking of empty dataset after filtering
-        tmp_data = self._data
+        # deepcopying because self._data object is changed if not doing this
+        tmp_data = deepcopy(self._data)
 
         # filtering by date
         if start_date is not None and end_date is not None:
@@ -58,14 +58,15 @@ class DataProcessor:
         tmp_data = tmp_data.groupby(by="timestamp").agg("count").sort_values(by="timestamp")
 
         # grouping data
-        if grouping == self.WEEKLY_GROUPING:
-            tmp_data = tmp_data.resample("W").sum()
-        elif grouping == self.BIWEEKLY_GROUPING:
-            tmp_data = tmp_data.resample("2W").sum()
-        elif grouping == self.MONTHLY_GROUPING:
-            tmp_data = tmp_data.resample("M").sum()
-        else:
-            tmp_data = tmp_data.resample("W").sum()
+        if not tmp_data.empty:
+            if grouping == self.WEEKLY_GROUPING:
+                tmp_data = tmp_data.resample("W").sum()
+            elif grouping == self.BIWEEKLY_GROUPING:
+                tmp_data = tmp_data.resample("2W").sum()
+            elif grouping == self.MONTHLY_GROUPING:
+                tmp_data = tmp_data.resample("M").sum()
+            else:
+                tmp_data = tmp_data.resample("W").sum()
 
         # changing to cumulative type if cumulative type is set
         if data_type == self.CUMULATIVE_TYPE:

@@ -8,12 +8,14 @@ arg_parser.add_argument("endDate", type=str, help="should be in format yyyy-mm-d
 arg_parser.add_argument(
     "Type",
     type=str,
+    default="usual",
     choices=("cumulative", "usual")
 )
 
 arg_parser.add_argument(
     "Grouping",
     type=str,
+    default="weekly",
     choices=("weekly", "bi-weekly", "monthly")
 )
 
@@ -29,6 +31,7 @@ arg_parser.add_argument(
 
 arg_parser.add_argument(
     "stars",
+    help="if none is set, returns with all stars",
     type=str,
     choices=("1", "2", "3", "4", "5")
 )

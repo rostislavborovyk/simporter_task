@@ -1,5 +1,5 @@
-import datetime
-
+from datetime import datetime
+from werkzeug.exceptions import BadRequest
 from flask_restx import Resource
 
 from app.api_v1.arg_parser import arg_parser
@@ -18,9 +18,25 @@ class Timeline(Resource):
     def get(self, **kwargs):
         args = arg_parser.parse_args()
 
+        raw_start_date = args.get("startDate", None)
+        raw_end_date = args.get("endDate", None)
+
+        if raw_start_date is not None:
+            start_date = int(datetime.fromisoformat(raw_start_date).timestamp())
+        else:
+            start_date = None
+
+        if raw_start_date is not None:
+            end_date = int(datetime.fromisoformat(raw_end_date).timestamp())
+        else:
+            end_date = None
+
+        if start_date is not None and end_date is not None and start_date > end_date:
+            raise BadRequest("startDate should be less then endDate")
+
         data = dp.get_data(
-            start_date=int(datetime.datetime.fromisoformat(args.get("startDate", None)).timestamp()),
-            end_date=int(datetime.datetime.fromisoformat(args.get("endDate", None)).timestamp()),
+            start_date=start_date,
+            end_date=end_date,
             grouping=args.get("Grouping", None),
             data_type=args.get("Type", None),
             asin=args.get("asin", None),
