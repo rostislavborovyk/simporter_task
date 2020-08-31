@@ -6,6 +6,11 @@
 - api_v1 package defines flask-restx Namespace for api routes
 - plots package defines flask Blueprint, defines route which returns html page with plots visualization, calls api routes
 
+You can run project locally with  
+```sh 
+bash prod.sh
+```
+  
 ## Heroku app 
 (heroku app loads around 2 minutes) 
 
