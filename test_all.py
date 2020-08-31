@@ -6,7 +6,7 @@ class TestTimeline(unittest.TestCase):
     def setUp(self) -> None:
         self.app = create_app()
 
-    def test_empty_get(self) -> None:
+    def test_get_empty(self) -> None:
         with self.app.test_client() as c:
             resp = c.get("/api/timeline")
             self.assertEqual(resp.status_code, 200)

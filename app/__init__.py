@@ -10,12 +10,16 @@ api = Api(
 )
 
 
-def add_namespaces(api):
+def add_namespaces(api: Api) -> None:
     from app.api_v1 import ns as ns1
     api.add_namespace(ns1)
 
 
-# todo add tests
+def register_blueprints(app: Flask) -> None:
+    from app.plots import bp as plots_bp
+    app.register_blueprint(plots_bp)
+
+
 # todo add docs to all
 
 
@@ -23,4 +27,5 @@ def create_app():
     app = Flask(__name__)
     api.init_app(app)
     add_namespaces(api)
+    register_blueprints(app)
     return app
