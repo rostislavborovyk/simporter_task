@@ -17,4 +17,4 @@ https://plot-api.herokuapp.com/plots
 https://plot-api.herokuapp.com/api/info
 ![alt text](img/api_info.png)
 
-Here you try to get data with various parameters 
+Here you try to interactively get data with various parameters 
