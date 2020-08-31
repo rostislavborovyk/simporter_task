@@ -35,7 +35,6 @@ function createCumulativePlot(fetchedData) {
 
 
 function main() {
-    console.log("Hello");
     fetch("/api/timeline?startDate=2019-01-01&endDate=2020-01-01&Type=usual&Grouping=monthly&stars=5")
         .then(response => response.json())
         .then(data => createUsualPlot(data))

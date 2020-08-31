@@ -2,7 +2,7 @@ from app import create_app
 import unittest
 
 
-class TestTimeline(unittest.TestCase):
+class TestApi(unittest.TestCase):
     def setUp(self) -> None:
         self.app = create_app()
 

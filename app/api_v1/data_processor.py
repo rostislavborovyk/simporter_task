@@ -9,9 +9,6 @@ from typing import Optional
 import pandas as pd
 from copy import deepcopy
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.max_rows', None)
-
 
 class DataProcessor:
     WEEKLY_GROUPING: str = "weekly"
