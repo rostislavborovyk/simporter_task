@@ -1,3 +1,7 @@
+"""
+This module defines routes in current namespace
+"""
+
 from datetime import datetime
 from werkzeug.exceptions import BadRequest
 from flask_restx import Resource
@@ -16,8 +20,10 @@ class Timeline(Resource):
     @ns.marshal_with(events_model)
     @ns.expect(arg_parser)
     def get(self, **kwargs):
+        # parsing request arguments
         args = arg_parser.parse_args()
 
+        # validating startDate and endDate arguments
         raw_start_date = args.get("startDate", None)
         raw_end_date = args.get("endDate", None)
 
@@ -37,6 +43,7 @@ class Timeline(Resource):
         except ValueError:
             raise BadRequest("incorrect date format")
 
+        # processing data to fit arguments in request
         data = dp.get_data(
             start_date=start_date,
             end_date=end_date,
@@ -47,6 +54,7 @@ class Timeline(Resource):
             stars=args.get("stars", None),
         )
 
+        # preparing data for response
         response_data = [
             EventDao(date=obj_date.strftime("%y-%m-%d"), value=obj_values["id"])
             for obj_date, obj_values in data.iterrows()

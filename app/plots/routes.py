@@ -1,3 +1,7 @@
+"""
+This module defines routes in current blueprint
+"""
+
 from flask import render_template
 
 from app.plots import bp

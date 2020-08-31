@@ -1,3 +1,7 @@
+"""
+This module defines event models used in @marshal_with decorator in routes module
+"""
+
 from flask_restx import fields
 
 from app import api

@@ -1,3 +1,8 @@
+"""
+This module defines DataProcessor which responsible for processing the data from csv file
+to fit the restrictions set in http request
+"""
+
 import datetime
 from typing import Optional
 

@@ -5,10 +5,11 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 
+RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-#EXPOSE ${PORT}
-EXPOSE 5000
+EXPOSE ${PORT}
+#EXPOSE 5000
 
 # running tests
 RUN pytest

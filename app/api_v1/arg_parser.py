@@ -1,3 +1,7 @@
+"""
+This module defines arg_parser responsible for parsing arguments in http request of /api/timeline route
+"""
+
 from flask_restx import reqparse
 
 arg_parser = reqparse.RequestParser(bundle_errors=True)
